@@ -73,11 +73,11 @@
 
 
   /* The cusped jharokha arch, used as a CSS mask on photo windows and cards. */
-  --arch-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125' preserveAspectRatio='none'><path d='M0 125 L0 44 L1.00 44.00 A8.28 8.28 0 0 1 3.96 28.95 A8.50 8.50 0 0 1 12.46 15.71 A8.95 8.95 0 0 1 25.50 5.47 A9.03 9.03 0 0 1 41.49 0.60 A9.19 9.19 0 0 1 58.51 0.60 A9.03 9.03 0 0 1 74.50 5.47 A8.95 8.95 0 0 1 87.54 15.71 A8.50 8.50 0 0 1 96.04 28.95 A8.28 8.28 0 0 1 99.00 44.00 L100 44 L100 125 Z'/></svg>");
+  --arch-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125' preserveAspectRatio='none'><path d='M0 125 L0 46 A9.78 9.78 0 0 1 2.03 31.66 A8.90 8.90 0 0 1 7.94 19.88 A8.95 8.95 0 0 1 17.26 10.45 A9.25 9.25 0 0 1 29.23 3.79 A9.56 9.56 0 0 1 42.88 0 A9.61 9.61 0 0 1 57.12 0 A9.56 9.56 0 0 1 70.77 3.79 A9.25 9.25 0 0 1 82.74 10.45 A8.95 8.95 0 0 1 92.06 19.88 A8.90 8.90 0 0 1 97.97 31.66 A9.78 9.78 0 0 1 100 46 L100 125 Z'/></svg>");
   /* Jaali lattice tile: overlapping circles make the classic four-petal screen. */
   --jaali-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><g fill='none' stroke='%239c6438' stroke-opacity='.32' stroke-width='1'><circle cx='0' cy='0' r='12'/><circle cx='24' cy='0' r='12'/><circle cx='0' cy='24' r='12'/><circle cx='24' cy='24' r='12'/><circle cx='12' cy='12' r='12'/></g></svg>");
   /* Block-print buti: a small hand-stamped flower, for memory cards without photos. */
-  --buti-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'><g fill='%23fffcf6' fill-opacity='.55'><circle cx='22' cy='22' r='2.4'/><ellipse cx='22' cy='15.5' rx='2.6' ry='4.2'/><ellipse cx='22' cy='28.5' rx='2.6' ry='4.2'/><ellipse cx='15.5' cy='22' rx='4.2' ry='2.6'/><ellipse cx='28.5' cy='22' rx='4.2' ry='2.6'/><circle cx='0' cy='0' r='1.6'/><circle cx='44' cy='0' r='1.6'/><circle cx='0' cy='44' r='1.6'/><circle cx='44' cy='44' r='1.6'/></g></svg>");
+  --buti-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g fill='%23fffcf6' fill-opacity='.5'><circle cx='24' cy='17.5' r='4.2'/><circle cx='24' cy='30.5' r='4.2'/><circle cx='17.5' cy='24' r='4.2'/><circle cx='30.5' cy='24' r='4.2'/><circle cx='0' cy='0' r='2'/><circle cx='48' cy='0' r='2'/><circle cx='0' cy='48' r='2'/><circle cx='48' cy='48' r='2'/></g><circle cx='24' cy='24' r='3' fill='%23b08d57' fill-opacity='.85'/></svg>");
 
   --content: 72rem;
   --reading: 40rem;

@@ -8,7 +8,7 @@ const multer = require("multer");
 
 const { protect, currentSession } = require("../middleware/auth");
 const { validate, validId } = require("../middleware/validate");
-const { authLimiter, aiLimiter, uploadLimiter } = require("../middleware/security");
+const { authLimiter, authIpLimiter, aiLimiter, uploadLimiter } = require("../middleware/security");
 const v = require("../utils/validators");
 const { config } = require("../config/env");
 const ai = require("../services/ai");
@@ -55,8 +55,8 @@ router.get("/features", (req, res) => {
 });
 
 // ---------------------------------------------------------------- auth
-router.post("/auth/register", authLimiter, validate(v.registerSchema), auth.register);
-router.post("/auth/login", authLimiter, validate(v.loginSchema), auth.login);
+router.post("/auth/register", authIpLimiter, authLimiter, validate(v.registerSchema), auth.register);
+router.post("/auth/login", authIpLimiter, authLimiter, validate(v.loginSchema), auth.login);
 router.post("/auth/logout", auth.logout);
 router.get("/auth/me", protect, auth.me);
 router.get("/auth/session", currentSession);

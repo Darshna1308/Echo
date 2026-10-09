@@ -1,0 +1,34 @@
+# Render Blueprint for the Echo API (backend/).
+# Dashboard -> New -> Blueprint -> pick this repository.
+# Values marked "sync: false" are asked for during setup; never commit them.
+services:
+  - type: web
+    name: echo-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: TRUST_PROXY
+        value: "1"
+      - key: MEDIA_STORAGE
+        value: gridfs
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false

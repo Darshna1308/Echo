@@ -22,3 +22,17 @@ test("repeated login attempts are throttled with 429", async () => {
   }
   assert.deepEqual(statuses, [401, 401, 401, 429, 429]);
 });
+
+test("the limit is per account, so another email from the same network still works", async () => {
+  const res = await request(ctx.app).post("/api/auth/login").send({ email: "someone-else@example.com", password: "wrong-password" });
+  assert.equal(res.status, 401);
+});
+
+test("a per-IP ceiling still stops spraying many accounts", async () => {
+  let last;
+  for (let i = 0; i < 50; i += 1) {
+    last = await request(ctx.app).post("/api/auth/login").send({ email: `spray${i}@example.com`, password: "wrong-password" });
+    if (last.status === 429) break;
+  }
+  assert.equal(last.status, 429);
+});

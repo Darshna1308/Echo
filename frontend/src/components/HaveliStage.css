@@ -139,3 +139,23 @@
     background: linear-gradient(180deg, rgba(26, 20, 14, 0.78) 0%, rgba(26, 20, 14, 0.35) 45%, rgba(26, 20, 14, 0) 70%);
   }
 }
+
+/* Wide layout: keep the window right of the headline, like the 3D scene. */
+@media (min-width: 901px) {
+  .hf-wall {
+    place-items: end;
+    padding-right: 14%;
+  }
+
+  .hf-niche--l {
+    display: none;
+  }
+
+  .hf-niche--r {
+    right: 4%;
+  }
+
+  .hf-light {
+    left: 64%;
+  }
+}

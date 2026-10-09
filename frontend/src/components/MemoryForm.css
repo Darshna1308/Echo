@@ -55,7 +55,7 @@
   line-height: 1.65;
   /* faint manuscript ruling */
   background-image: repeating-linear-gradient(180deg, transparent 0 calc(1.98rem - 1px), rgba(217, 200, 177, 0.45) calc(1.98rem - 1px) 1.98rem);
-  background-position: 0 0.85rem;
+  background-position: 0 0.42rem;
   background-attachment: local;
 }
 

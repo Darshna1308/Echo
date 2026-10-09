@@ -142,7 +142,7 @@ async function ask(req, res) {
     return res.json({
       ...base,
       mode: "keyword",
-      answer: `AI answers aren't switched on for this Echo server, so here ${sources.length === 1 ? "is the memory" : `are the ${sources.length} memories`} that best match your question.`,
+      answer: `AI answers aren't switched on for this Echo server, so here ${sources.length === 1 ? "is the memory that best matches" : `are the ${sources.length} memories that best match`} your question.`,
       sources,
       citations: sources.map((s) => s.n),
       insufficient: false,

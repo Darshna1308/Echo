@@ -58,7 +58,7 @@ function requestLogger(req, res, next) {
   next();
 }
 
-function limiter({ windowMs, limit, message, keyByUser = false }) {
+function limiter({ windowMs, limit, message, keyByUser = false, keyByEmail = false }) {
   return rateLimit({
     windowMs,
     limit,
@@ -67,7 +67,11 @@ function limiter({ windowMs, limit, message, keyByUser = false }) {
     skip: () => config.isTest && !process.env.TEST_RATE_LIMITS,
     keyGenerator: keyByUser
       ? (req) => (req.userId ? `u:${req.userId}` : rateLimit.ipKeyGenerator(req.ip))
-      : undefined,
+      : keyByEmail
+        ? // Per IP *and* email: one account can't be brute-forced, and people
+          // sharing an IP (or a proxy) don't lock each other out.
+          (req) => `${rateLimit.ipKeyGenerator(req.ip)}|${String(req.body?.email || "").trim().toLowerCase().slice(0, 254)}`
+        : undefined,
     handler: (req, res, next) => next(new AppError(429, message)),
   });
 }
@@ -76,6 +80,14 @@ const authLimiter = limiter({
   windowMs: 15 * 60 * 1000,
   limit: config.rateLimits.authPer15Min,
   message: "Too many attempts. Please wait a few minutes and try again.",
+  keyByEmail: true,
+});
+
+// A looser per-IP ceiling across all accounts (stops mass sign-ups/guessing).
+const authIpLimiter = limiter({
+  windowMs: 15 * 60 * 1000,
+  limit: config.rateLimits.authPer15Min * 15,
+  message: "Too many attempts from your network. Please wait a few minutes and try again.",
 });
 
 const aiLimiter = limiter({
@@ -97,6 +109,7 @@ module.exports = {
   noStore,
   requestLogger,
   authLimiter,
+  authIpLimiter,
   aiLimiter,
   uploadLimiter,
 };

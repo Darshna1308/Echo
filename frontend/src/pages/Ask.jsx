@@ -59,7 +59,7 @@ function Answer({ entry }) {
       {result && (
         <div className="answer-body">
           <p className={`answer-mode answer-mode--${result.mode}`}>
-            {result.mode === "ai" ? `AI answer from ${result.sources.length === 1 ? "1 memory" : `${result.sources.length} memories`} in your archive` : "Matching memories"}
+            {result.mode === "ai" ? (result.citations.length ? `AI answer, citing ${result.citations.length === 1 ? "1 memory" : `${result.citations.length} memories`} from your archive` : "AI answer") : "Matching memories"}
             {result.providerError ? " (the AI provider couldn't be reached)" : ""}
           </p>
           <AnswerText text={result.answer} sources={result.sources} />

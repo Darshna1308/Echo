@@ -199,3 +199,9 @@
     display: none;
   }
 }
+
+@media (min-width: 901px) {
+  .welcome-lede {
+    max-width: 21rem;
+  }
+}
