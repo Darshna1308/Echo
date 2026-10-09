@@ -1,0 +1,64 @@
+.settings-block {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--line);
+}
+
+.settings-block h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.settings-block > p {
+  color: var(--ink-soft);
+}
+
+.settings-list {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.settings-list > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.settings-list dt {
+  color: var(--text-muted);
+}
+
+.settings-list dd {
+  margin: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.settings-note {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.settings-danger h2 {
+  color: var(--terracotta);
+}
+
+.settings-delete-form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (max-width: 520px) {
+  .settings-list > div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

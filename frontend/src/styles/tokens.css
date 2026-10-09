@@ -1,0 +1,86 @@
+/* =========================================================
+   Echo design tokens — Rajasthan heritage, contemporary.
+   Every colour, font and spacing value in the app comes from here.
+   ========================================================= */
+:root {
+  /* Stone & paper (foundation) */
+  --sandstone: #c88b5a;
+  --sandstone-deep: #9c6438;
+  --sandstone-light: #e6c29d;
+  --ivory: #f8f2e8;
+  --paper: #efe3d0;
+  --surface: #fffcf6;
+
+  /* Ink */
+  --ink: #29251f;
+  --ink-soft: #4a4238;
+  --muted: #786f63;
+  --line: #d9c8b1;
+  --line-soft: #e8dccb;
+
+  /* Blue pottery & indigo (balancing accents, primary actions) */
+  --indigo: #20365b;
+  --indigo-deep: #16263f;
+  --cobalt: #315d91;
+  --cobalt-soft: #dfe7f1;
+  --turquoise: #4e9a99;
+  --turquoise-soft: #dcecea;
+
+  /* Emphasis — used sparingly */
+  --terracotta: #a94f36;
+  --terracotta-soft: #f3ded6;
+  --brass: #b08d57;
+
+  /* Semantic */
+  --bg: var(--ivory);
+  --text: var(--ink);
+  --text-muted: var(--muted);
+  --action: var(--indigo);
+  --action-hover: var(--cobalt);
+  --danger: var(--terracotta);
+  --success: #3f7a5c;
+  --focus: #315d91;
+
+  /* Type */
+  --font-serif: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
+  --font-sans: "DM Sans Variable", "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-hand: "Kalam", "Segoe Print", "Bradley Hand", cursive;
+
+  /* Type scale (1.25 ratio, 16px base) */
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5625rem;
+  --step-3: clamp(1.75rem, 1.4rem + 1.4vw, 2.4rem);
+  --step-4: clamp(2.2rem, 1.6rem + 2.6vw, 3.4rem);
+  --step-5: clamp(2.8rem, 1.8rem + 4.4vw, 5rem);
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* Shape — the arch is Echo's signature; corners elsewhere stay small. */
+  --radius-sm: 3px;
+  --radius: 6px;
+  --shadow-stone: 0 1px 0 rgba(255, 252, 246, 0.7) inset, 0 18px 40px -24px rgba(60, 38, 18, 0.45);
+  --shadow-lift: 0 2px 4px rgba(41, 37, 31, 0.06), 0 24px 48px -28px rgba(32, 54, 91, 0.45);
+
+
+  /* The cusped jharokha arch, used as a CSS mask on photo windows and cards. */
+  --arch-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125' preserveAspectRatio='none'><path d='M0 125 L0 44 L1.00 44.00 A8.28 8.28 0 0 1 3.96 28.95 A8.50 8.50 0 0 1 12.46 15.71 A8.95 8.95 0 0 1 25.50 5.47 A9.03 9.03 0 0 1 41.49 0.60 A9.19 9.19 0 0 1 58.51 0.60 A9.03 9.03 0 0 1 74.50 5.47 A8.95 8.95 0 0 1 87.54 15.71 A8.50 8.50 0 0 1 96.04 28.95 A8.28 8.28 0 0 1 99.00 44.00 L100 44 L100 125 Z'/></svg>");
+  /* Jaali lattice tile: overlapping circles make the classic four-petal screen. */
+  --jaali-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><g fill='none' stroke='%239c6438' stroke-opacity='.32' stroke-width='1'><circle cx='0' cy='0' r='12'/><circle cx='24' cy='0' r='12'/><circle cx='0' cy='24' r='12'/><circle cx='24' cy='24' r='12'/><circle cx='12' cy='12' r='12'/></g></svg>");
+  /* Block-print buti: a small hand-stamped flower, for memory cards without photos. */
+  --buti-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'><g fill='%23fffcf6' fill-opacity='.55'><circle cx='22' cy='22' r='2.4'/><ellipse cx='22' cy='15.5' rx='2.6' ry='4.2'/><ellipse cx='22' cy='28.5' rx='2.6' ry='4.2'/><ellipse cx='15.5' cy='22' rx='4.2' ry='2.6'/><ellipse cx='28.5' cy='22' rx='4.2' ry='2.6'/><circle cx='0' cy='0' r='1.6'/><circle cx='44' cy='0' r='1.6'/><circle cx='0' cy='44' r='1.6'/><circle cx='44' cy='44' r='1.6'/></g></svg>");
+
+  --content: 72rem;
+  --reading: 40rem;
+  --header-h: 4.25rem;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}

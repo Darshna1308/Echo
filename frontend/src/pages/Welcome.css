@@ -1,0 +1,201 @@
+.welcome {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(22rem, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.welcome .haveli {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.welcome-intro {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  max-width: 36rem;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.welcome-intro .wordmark {
+  color: #f3e2c6;
+  margin-bottom: clamp(1rem, 6vh, 4rem);
+}
+
+.welcome-intro .wordmark-mark {
+  color: var(--sandstone-light);
+}
+
+.welcome-title {
+  max-width: 12ch;
+  font-size: clamp(2.4rem, 1.4rem + 2.5vw, 4.25rem);
+  font-weight: 500;
+  line-height: 1.02;
+  color: #fff8ec;
+  text-shadow: 0 2px 30px rgba(20, 14, 8, 0.45);
+}
+
+.welcome-lede {
+  max-width: 30rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: rgba(248, 236, 216, 0.88);
+}
+
+/* ---------- Auth panel: an ivory manuscript leaf ---------- */
+.welcome-panel {
+  position: relative;
+  display: grid;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+}
+
+/* A thin block-printed border along the leaf's inner edge. */
+.welcome-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  background: var(--jaali-pattern) center / 10px 10px repeat-y, var(--paper);
+  border-right: 1px solid var(--line);
+}
+
+.welcome-panel-inner {
+  width: min(100%, 25rem);
+  margin-inline: auto;
+}
+
+.auth-tabs {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--ivory);
+}
+
+.auth-tab {
+  padding: 0.45rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.auth-tab[aria-selected="true"] {
+  background: var(--indigo);
+  color: var(--surface);
+}
+
+.auth-heading {
+  font-size: var(--step-4);
+  font-weight: 500;
+}
+
+.auth-sub {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+}
+
+.auth-notice {
+  margin-top: var(--space-4);
+  padding: 0.7rem 0.9rem;
+  border-left: 3px solid var(--cobalt);
+  background: var(--cobalt-soft);
+  color: var(--indigo);
+  font-size: 0.925rem;
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.auth-password {
+  position: relative;
+}
+
+.auth-reveal {
+  position: absolute;
+  right: 0.35rem;
+  top: 1.85rem;
+  min-height: 2.2rem;
+  padding: 0 0.6rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--cobalt);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.auth-password .field-control {
+  padding-right: 4rem;
+}
+
+.auth-error {
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid var(--terracotta);
+  background: var(--terracotta-soft);
+  color: #7a3523;
+  font-size: 0.925rem;
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.auth-privacy {
+  margin-top: var(--space-5);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 900px) {
+  .welcome {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome .haveli {
+    min-height: 0;
+    height: min(62vh, 34rem);
+  }
+
+  .welcome-intro .wordmark {
+    margin-bottom: var(--space-3);
+  }
+
+  .welcome-title {
+    font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  .welcome-lede {
+    font-size: 0.975rem;
+  }
+
+  .welcome-panel {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .welcome-panel::before {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-lede {
+    display: none;
+  }
+}

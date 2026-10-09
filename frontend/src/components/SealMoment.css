@@ -1,0 +1,63 @@
+.seal-moment {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(248, 242, 232, 0.86);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: sealFade 0.25s var(--ease);
+}
+
+@keyframes sealFade {
+  from {
+    opacity: 0;
+  }
+}
+
+.seal-stage {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  perspective: 600px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.seal-wax {
+  width: 8.5rem;
+  height: 8.5rem;
+  filter: drop-shadow(0 14px 18px rgba(124, 53, 34, 0.35));
+  animation: sealPress 0.75s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+
+@keyframes sealPress {
+  0% {
+    opacity: 0;
+    transform: translateZ(260px) rotateX(18deg) rotate(-14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateZ(-14px) rotateX(0) rotate(2deg);
+  }
+  100% {
+    transform: translateZ(0) rotate(0);
+  }
+}
+
+.seal-text {
+  margin-top: 0.6rem;
+  font-family: var(--font-serif);
+  font-size: var(--step-3);
+  font-weight: 600;
+  animation: sealFade 0.4s 0.45s var(--ease) both;
+}
+
+.seal-title {
+  max-width: 28rem;
+  color: var(--text-muted);
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  animation: sealFade 0.4s 0.6s var(--ease) both;
+}

@@ -1,0 +1,112 @@
+.door {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  padding: 8% 8% 0;
+  background: linear-gradient(160deg, #e7c39d, #c88b5a 60%, #a86d42);
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+}
+
+.door-inner {
+  position: relative;
+  height: 100%;
+  perspective: 700px;
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  background: #3b2a1c;
+}
+
+/* Light from inside, revealed as the doors open. */
+.door-glow {
+  position: absolute;
+  inset: 0;
+  background: var(--jaali-pattern), radial-gradient(ellipse at 50% 75%, #fff1d6, #f2c48a 45%, #b9783f 100%);
+  background-size: 18px 18px, 100% 100%;
+}
+
+.door-leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  display: grid;
+  grid-template-rows: 1.25fr 1fr;
+  gap: 7%;
+  padding: 34% 12% 12%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, #2c4a76, #20365b);
+  transition: transform 1.2s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.door-leaf--l {
+  left: 0;
+  transform-origin: left center;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.35);
+}
+
+.door-leaf--r {
+  right: 0;
+  transform-origin: right center;
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Carved panels with brass studs at the corners. */
+.door-panel {
+  border: 1px solid rgba(176, 141, 87, 0.65);
+  border-radius: 2px;
+  background:
+    radial-gradient(circle at 10% 10%, #d4b07a 0 2px, transparent 2.5px),
+    radial-gradient(circle at 90% 10%, #d4b07a 0 2px, transparent 2.5px),
+    radial-gradient(circle at 10% 90%, #d4b07a 0 2px, transparent 2.5px),
+    radial-gradient(circle at 90% 90%, #d4b07a 0 2px, transparent 2.5px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.12));
+}
+
+.door-lock {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 14%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e8c98f, #b08d57 60%, #7d6235);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.door-lock::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: 18%;
+  height: 40%;
+  translate: -50% 0;
+  border-radius: 2px;
+  background: #4d3a1d;
+}
+
+.door.is-ready .door-lock {
+  animation: lockGlint 2.4s ease-in-out infinite;
+}
+
+@keyframes lockGlint {
+  50% {
+    box-shadow: 0 0 0 4px rgba(242, 196, 138, 0.45), 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.door.is-open .door-leaf--l {
+  transform: rotateY(-78deg);
+}
+
+.door.is-open .door-leaf--r {
+  transform: rotateY(78deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .door-leaf {
+    transition: none;
+  }
+}

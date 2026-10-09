@@ -1,0 +1,248 @@
+.mcard {
+  min-width: 0;
+}
+
+.mcard-link {
+  --tilt-x: 0;
+  --tilt-y: 0;
+  display: grid;
+  gap: var(--space-3);
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.mcard-link:focus-visible {
+  outline-offset: 6px;
+}
+
+/* The arch window sits in a sandstone surround with a carved inner edge. */
+.mcard-window {
+  position: relative;
+  padding: 7px 7px 0;
+  background: linear-gradient(180deg, var(--sandstone-light), #d9ab7f);
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  aspect-ratio: 4 / 5;
+  transform: perspective(900px) rotateX(calc(var(--tilt-y) * -4deg)) rotateY(calc(var(--tilt-x) * 5deg));
+  transition: transform 0.35s var(--ease);
+}
+
+/* Light moving across the stone as the pointer moves. */
+.mcard-window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at calc(50% + var(--tilt-x) * 40%) calc(30% + var(--tilt-y) * 30%), rgba(255, 240, 214, 0.28), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+.mcard-link:hover .mcard-window::after {
+  opacity: 1;
+}
+
+.mcard-badge {
+  position: absolute;
+  right: 12%;
+  bottom: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: rgba(32, 54, 91, 0.86);
+  color: var(--surface);
+}
+
+.mcard-badge svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ---------- Window contents ---------- */
+.mwin {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+}
+
+.mwin--photos {
+  display: grid;
+  gap: 4px;
+  background: #d9ab7f;
+}
+
+.mwin--n2 {
+  grid-template-rows: 1.4fr 1fr;
+}
+
+.mwin--n3 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.45fr 1fr;
+}
+
+.mwin--n3 .mwin-cell:first-child {
+  grid-column: 1 / -1;
+}
+
+.mwin-cell {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mwin-cell .pf,
+.mwin-cell .pf-image {
+  height: 100%;
+}
+
+.mwin-cell .pf-image {
+  aspect-ratio: auto;
+}
+
+.mwin-cell img {
+  transition: transform 0.8s var(--ease), filter 0.8s var(--ease);
+}
+
+.mcard-link:hover .mwin-cell img {
+  transform: scale(1.035);
+}
+
+.mwin-more {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(41, 37, 31, 0.72);
+  color: var(--surface);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Memories without photos: a block-printed panel with their opening words. */
+.mwin--text {
+  display: grid;
+  align-items: end;
+  padding: 38% 1.1rem 1.2rem;
+  background-image: var(--buti-pattern);
+  background-size: 34px 34px;
+}
+
+.mwin--indigo {
+  background-color: var(--indigo);
+}
+
+.mwin--turquoise {
+  background-color: #3f7f7e;
+}
+
+.mwin--terracotta {
+  background-color: #8f4630;
+}
+
+.mwin--sandstone {
+  background-color: #9c6438;
+}
+
+.mwin-words {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding: 0.6rem 0.7rem;
+  border-radius: 3px;
+  background: rgba(255, 252, 246, 0.94);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+/* ---------- Text ---------- */
+.mcard-body {
+  display: grid;
+  gap: 0.2rem;
+  padding-inline: 0.15rem;
+}
+
+.mcard-date {
+  font-family: var(--font-hand);
+  color: var(--sandstone-deep);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.mcard-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.mcard-link:hover .mcard-title {
+  color: var(--indigo);
+}
+
+.mcard-meta {
+  display: grid;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.mcard-place,
+.mcard-people {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mcard-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.6rem;
+  color: var(--cobalt);
+  font-size: 0.8125rem;
+}
+
+.mcard-reason {
+  margin-top: 0.2rem;
+  color: #2f6564;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* Grids of cards */
+.mgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+  gap: var(--space-6) var(--space-5);
+}
+
+@media (max-width: 520px) {
+  .mgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5) var(--space-3);
+  }
+
+  .mcard-title {
+    font-size: 1.2rem;
+  }
+
+  .mwin-words {
+    -webkit-line-clamp: 4;
+    font-size: 0.925rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcard-window {
+    transform: none;
+  }
+}

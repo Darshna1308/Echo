@@ -1,0 +1,213 @@
+.archive-head {
+  margin-bottom: var(--space-5);
+}
+
+.archive-head .page-title {
+  margin-top: 0.15rem;
+}
+
+.archive-count {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+}
+
+.otd-band {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: var(--space-5);
+  padding: 0.6rem 1rem 0.6rem 0.75rem;
+  border: 1px solid rgba(78, 154, 153, 0.35);
+  border-radius: 999px;
+  background: var(--turquoise-soft);
+  color: #2f6564;
+  font-size: 0.925rem;
+  text-decoration: none;
+}
+
+.otd-band:hover {
+  border-color: var(--turquoise);
+  color: #234e4d;
+}
+
+.otd-band-sun {
+  flex: none;
+  width: 1.5rem;
+  height: 0.85rem;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: linear-gradient(180deg, #e6a95e, #c88b5a);
+}
+
+/* ---------- Search & filters ---------- */
+.archive-tools {
+  position: sticky;
+  top: calc(var(--header-h) + 7px);
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 -0.5rem var(--space-6);
+  padding: 0.6rem 0.5rem;
+  background: rgba(248, 242, 232, 0.94);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.search {
+  position: relative;
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.search svg {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  width: 1.15rem;
+  height: 1.15rem;
+  translate: 0 -50%;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  min-height: 2.85rem;
+  padding: 0.5rem 0.9rem 0.5rem 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.search input:focus {
+  outline: none;
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px rgba(49, 93, 145, 0.16);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.filter select {
+  max-width: 12rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 2rem 0.35rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23786F63' stroke-width='1.6'/></svg>") no-repeat right 0.75rem center;
+  appearance: none;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.filter select.is-set {
+  border-color: var(--indigo);
+  background-color: var(--cobalt-soft);
+  color: var(--indigo);
+  font-weight: 600;
+}
+
+.archive-results {
+  margin-bottom: var(--space-5);
+  color: var(--text-muted);
+}
+
+/* ---------- Year / month timeline ---------- */
+.years {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.year {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+/* The year, carved large in sandstone, stays in view while you scroll. */
+.year-label {
+  position: sticky;
+  top: calc(var(--header-h) + 5.5rem);
+  align-self: start;
+  font-size: 3.6rem;
+  font-weight: 500;
+  line-height: 0.9;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--sandstone-deep);
+  background: linear-gradient(180deg, rgba(200, 139, 90, 0.35), rgba(200, 139, 90, 0.08));
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-variant-numeric: lining-nums;
+}
+
+.year-months {
+  display: grid;
+  gap: var(--space-7);
+  min-width: 0;
+}
+
+.month-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-hand);
+  font-weight: 400;
+  font-size: 1.35rem;
+  color: var(--sandstone-deep);
+}
+
+.month-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line), transparent);
+}
+
+.archive-more {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+
+.archive-end {
+  color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+}
+
+@media (max-width: 760px) {
+  .year {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .year-label {
+    position: static;
+    font-size: 2.8rem;
+  }
+
+  .archive-tools {
+    position: static;
+  }
+
+  .filters {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.2rem;
+  }
+
+  .filter select {
+    max-width: 10rem;
+  }
+}

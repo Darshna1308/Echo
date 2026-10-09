@@ -1,0 +1,241 @@
+.ask-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-stone);
+}
+
+.ask-form:focus-within {
+  border-color: var(--cobalt);
+}
+
+.ask-input {
+  width: 100%;
+  min-height: 3.2rem;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  background: transparent;
+  resize: none;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+.ask-input:focus {
+  outline: none;
+}
+
+.ask-note {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.ask-examples {
+  margin-top: var(--space-6);
+}
+
+.ask-examples > p {
+  font-family: var(--font-hand);
+  color: var(--sandstone-deep);
+  font-size: 1.1rem;
+}
+
+.ask-examples ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.example {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  text-align: left;
+  color: var(--ink-soft);
+}
+
+.example:hover {
+  border-color: var(--sandstone);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.answers {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.answer {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.answer-q {
+  justify-self: end;
+  max-width: 85%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px 12px 2px 12px;
+  background: var(--indigo);
+  color: var(--surface);
+}
+
+.answer-thinking {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.answer-error {
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--terracotta);
+  background: var(--terracotta-soft);
+  color: #7a3523;
+}
+
+.answer-body {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+.answer-mode {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--cobalt);
+}
+
+.answer-mode--keyword {
+  color: var(--sandstone-deep);
+}
+
+.answer-text {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  line-height: 1.55;
+}
+
+.cite {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  margin: 0 0.12rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--cobalt-soft);
+  color: var(--indigo);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  vertical-align: 0.2em;
+}
+
+.cite:hover {
+  background: var(--indigo);
+  color: var(--surface);
+}
+
+.answer-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.sources {
+  display: grid;
+  gap: 0.4rem;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.source-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.source-link:hover {
+  border-color: var(--sandstone);
+  background: var(--ivory);
+}
+
+.source.is-cited .source-link {
+  border-color: rgba(49, 93, 145, 0.35);
+}
+
+.source-n {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--paper);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.source.is-cited .source-n {
+  background: var(--cobalt-soft);
+  color: var(--indigo);
+}
+
+.source-text {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.source-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.source-meta {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.source-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 520px) {
+  .ask-form {
+    grid-template-columns: 1fr;
+  }
+
+  .ask-input {
+    font-size: 1.2rem;
+  }
+}

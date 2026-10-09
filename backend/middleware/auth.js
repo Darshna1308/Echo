@@ -49,11 +49,13 @@ function readToken(req) {
   return null;
 }
 
-async function protect(req, res, next) {
+/*
+  Resolves the session to a user. Returns { user } or { error } and clears
+  a bad cookie. Never throws for an invalid token.
+*/
+async function resolveSession(req, res) {
   const token = readToken(req);
-  if (!token) {
-    return next(AppError.unauthorized("Please log in to continue."));
-  }
+  if (!token) return { error: AppError.unauthorized("Please log in to continue.") };
 
   let payload;
   try {
@@ -64,27 +66,39 @@ async function protect(req, res, next) {
       error.name === "TokenExpiredError"
         ? "Your session has expired. Please log in again."
         : "Your session is no longer valid. Please log in again.";
-    return next(new AppError(401, message, { code: "SESSION_INVALID" }));
+    return { error: new AppError(401, message, { code: "SESSION_INVALID" }) };
   }
 
   if (!payload?.sub || !mongoose.isValidObjectId(payload.sub)) {
     clearSessionCookie(res);
-    return next(new AppError(401, "Your session is no longer valid. Please log in again.", { code: "SESSION_INVALID" }));
+    return { error: new AppError(401, "Your session is no longer valid. Please log in again.", { code: "SESSION_INVALID" }) };
   }
 
   const user = await User.findById(payload.sub).select("name email tokenVersion createdAt");
   if (!user || (user.tokenVersion || 0) !== (payload.tv || 0)) {
     clearSessionCookie(res);
-    return next(new AppError(401, "Your session has ended. Please log in again.", { code: "SESSION_INVALID" }));
+    return { error: new AppError(401, "Your session has ended. Please log in again.", { code: "SESSION_INVALID" }) };
   }
+  return { user };
+}
 
+async function protect(req, res, next) {
+  const { user, error } = await resolveSession(req, res);
+  if (error) return next(error);
   req.user = user;
   req.userId = user._id;
   return next();
 }
 
+/* For the app's start-up check: 200 with user or null, never a 401. */
+async function currentSession(req, res) {
+  const { user } = await resolveSession(req, res);
+  res.json({ success: true, user: user ? user.toPublic() : null });
+}
+
 module.exports = {
   protect,
+  currentSession,
   setSessionCookie,
   clearSessionCookie,
 };

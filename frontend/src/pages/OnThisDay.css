@@ -1,0 +1,41 @@
+.otd-head {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-7);
+  padding-top: var(--space-5);
+}
+
+/* A low sun on the horizon line. */
+.otd-sun {
+  width: 5.5rem;
+  height: 2.75rem;
+  margin-bottom: var(--space-2);
+  border-radius: 5.5rem 5.5rem 0 0;
+  background: radial-gradient(circle at 50% 100%, #f2c48a 0 45%, #d99a5c 46% 70%, #c88b5a 71%);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.otd-head .page-title {
+  font-size: var(--step-5);
+}
+
+.otd-group {
+  margin-bottom: var(--space-7);
+}
+
+.otd-years {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  font-size: var(--step-3);
+  font-weight: 500;
+}
+
+.otd-years span {
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--sandstone-deep);
+}

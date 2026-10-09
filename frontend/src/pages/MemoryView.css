@@ -1,0 +1,353 @@
+.memory {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.memory-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: calc(var(--space-6) * -1);
+}
+
+/* ---------- Hero ---------- */
+.memory-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+}
+
+/*
+  The arched frame is built from layers at different depths
+  (frame, recess, photo, light) so pointer movement gives real parallax.
+*/
+.hero-arch {
+  --tilt-x: 0;
+  --tilt-y: 0;
+  position: relative;
+  width: min(100%, 30rem);
+  aspect-ratio: 4 / 5;
+  justify-self: center;
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateX(calc(var(--tilt-y) * -5deg)) rotateY(calc(var(--tilt-x) * 7deg));
+  transition: transform 0.4s var(--ease);
+}
+
+.hero-arch-frame {
+  position: absolute;
+  inset: 0;
+  background:
+    var(--jaali-pattern),
+    linear-gradient(160deg, #e7c39d 0%, #c88b5a 55%, #a86d42 100%);
+  background-size: 20px 20px, 100% 100%;
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  box-shadow: var(--shadow-lift);
+  transform: translateZ(0);
+}
+
+.hero-arch-recess {
+  position: absolute;
+  inset: 5.5% 6% 0;
+  background: #6b4a30;
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  transform: translateZ(18px);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.hero-arch-recess > .mwin {
+  height: 100%;
+}
+
+.hero-arch-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.hero-arch-photo .pf,
+.hero-arch-photo .pf-image {
+  height: 100%;
+}
+
+.hero-arch-photo .pf-image {
+  aspect-ratio: auto;
+}
+
+/* Inner shadow cast by the carved frame onto the photo. */
+.hero-arch-recess::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 14px 22px -10px rgba(40, 24, 10, 0.55), inset 10px 0 18px -12px rgba(40, 24, 10, 0.5);
+}
+
+.hero-arch-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at calc(30% + var(--tilt-x) * 25%) calc(20% + var(--tilt-y) * 20%), rgba(255, 238, 205, 0.35), transparent 45%);
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  transform: translateZ(30px);
+  mix-blend-mode: soft-light;
+}
+
+.memory-hero-text {
+  display: grid;
+  gap: var(--space-4);
+  align-content: center;
+  min-width: 0;
+}
+
+.memory-date {
+  font-family: var(--font-hand);
+  color: var(--sandstone-deep);
+  font-size: 1.2rem;
+}
+
+.memory-title {
+  font-size: var(--step-5);
+  font-weight: 500;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.memory-place {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.05rem;
+}
+
+.memory-place svg {
+  flex: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--sandstone-deep);
+}
+
+.memory-place a {
+  color: var(--ink);
+  text-decoration-color: var(--line);
+}
+
+.memory-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.memory-chips-label {
+  margin-right: 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- Story ---------- */
+.memory-story {
+  width: min(100%, var(--reading));
+  margin-inline: auto;
+  font-family: var(--font-serif);
+  font-size: 1.32rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.memory-story p + p {
+  margin-top: 1em;
+}
+
+/* A manuscript initial in sandstone. */
+.memory-story p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-size: 3.4em;
+  line-height: 0.82;
+  font-weight: 600;
+  color: var(--sandstone-deep);
+}
+
+/* ---------- Gallery ---------- */
+.memory-gallery {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  gap: var(--space-6) var(--space-5);
+  align-items: start;
+}
+
+.gallery-item {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.gallery-item:nth-child(3n + 1) .pf--print {
+  --rot: -0.8deg;
+}
+
+.gallery-item:nth-child(3n + 2) .pf--print {
+  --rot: 0.6deg;
+}
+
+.gallery-item .pf--print:hover {
+  transform: rotate(0deg) translateY(-3px);
+}
+
+.gallery-item figcaption {
+  font-family: var(--font-hand);
+  color: var(--ink-soft);
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* ---------- Voice ---------- */
+.memory-voice {
+  display: grid;
+  gap: var(--space-4);
+  width: min(100%, var(--reading));
+  margin-inline: auto;
+}
+
+.memory-voice audio {
+  width: 100%;
+}
+
+.memory-transcript {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--turquoise);
+  background: var(--surface);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.memory-transcript p + p {
+  margin-top: 0.8em;
+}
+
+/* ---------- AI notes (visibly distinct from the user's own words) ---------- */
+.ai-notes {
+  display: grid;
+  gap: var(--space-4);
+  width: min(100%, var(--reading));
+  margin-inline: auto;
+  padding: var(--space-5);
+  border: 1px dashed rgba(49, 93, 145, 0.45);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(223, 231, 241, 0.6), rgba(223, 231, 241, 0.25));
+}
+
+.ai-notes-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.ai-notes-head h2 {
+  font-size: 1.5rem;
+  color: var(--indigo);
+}
+
+.ai-badge {
+  color: var(--cobalt);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.ai-summary {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+
+.ai-meta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.ai-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ai-tags-label {
+  margin-right: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.ai-actions,
+.ai-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ai-empty p {
+  flex: 1 1 18rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.ai-edit {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* ---------- Connections ---------- */
+.connections {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.connections-grid {
+  margin-top: var(--space-4);
+}
+
+.memory-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line-soft);
+}
+
+@media (max-width: 860px) {
+  .memory-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-arch {
+    width: min(100%, 24rem);
+  }
+
+  .memory-story {
+    font-size: 1.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-arch {
+    transform: none;
+  }
+}

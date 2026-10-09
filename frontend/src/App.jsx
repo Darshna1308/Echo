@@ -1,118 +1,84 @@
-import { useState } from "react";
-import "./App.css";
+import { lazy, Suspense } from "react";
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from "react-router";
 
-import Navbar from "./components/Navbar";
-import Auth from "./pages/Auth";
-import CreateMemory from "./pages/CreateMemory";
-import Timeline from "./pages/Timeline";
-import MemoryDetail from "./pages/MemoryDetail";
-import EditMemory from "./pages/EditMemory";
+import { AuthProvider, useAuth } from "./lib/auth";
+import { ToastProvider } from "./components/ui/Toast";
+import { PageLoader } from "./components/ui";
+import AppShell from "./components/AppShell";
+import Archive from "./pages/Archive";
 
-import {
-  getUser,
-  isAuthenticated,
-  logout,
-} from "./utils/auth";
+// Pages other than the archive are loaded on demand to keep the first load small.
+const Welcome = lazy(() => import("./pages/Welcome"));
+const MemoryNew = lazy(() => import("./pages/MemoryNew"));
+const MemoryEdit = lazy(() => import("./pages/MemoryEdit"));
+const MemoryView = lazy(() => import("./pages/MemoryView"));
+const Ask = lazy(() => import("./pages/Ask"));
+const OnThisDay = lazy(() => import("./pages/OnThisDay"));
+const Capsules = lazy(() => import("./pages/Capsules"));
+const CapsuleView = lazy(() => import("./pages/CapsuleView"));
+const Settings = lazy(() => import("./pages/Settings"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
-function App() {
-  const [user, setUser] = useState(() =>
-    isAuthenticated() ? getUser() : null
-  );
-
-  const [currentPage, setCurrentPage] = useState("timeline");
-  const [selectedMemoryId, setSelectedMemoryId] = useState(null);
-
-  const handleLogin = (loggedInUser) => {
-    setUser(loggedInUser);
-    setCurrentPage("timeline");
-  };
-
-  const handleLogout = () => {
-    logout();
-    setUser(null);
-    setSelectedMemoryId(null);
-    setCurrentPage("timeline");
-  };
-
-  const openMemory = (memoryId) => {
-    setSelectedMemoryId(memoryId);
-    setCurrentPage("memory");
-  };
-
-  const openEditMemory = (memoryId) => {
-    setSelectedMemoryId(memoryId);
-    setCurrentPage("edit");
-  };
-
-  const closeMemory = () => {
-    setSelectedMemoryId(null);
-    setCurrentPage("timeline");
-  };
-
-  const closeEditMemory = () => {
-    setCurrentPage("memory");
-  };
-
-  if (!user) {
-    return <Auth onLogin={handleLogin} />;
-  }
-
-  return (
-    <div className="echo-app">
-      <div className="beach-background" aria-hidden="true">
-        <div className="beach-sun"></div>
-
-        <div className="floating-light light-one"></div>
-        <div className="floating-light light-two"></div>
-        <div className="floating-light light-three"></div>
-        <div className="floating-light light-four"></div>
-
-        <div className="beach-ocean"></div>
-
-        <div className="beach-wave wave-one"></div>
-        <div className="beach-wave wave-two"></div>
-        <div className="beach-wave wave-three"></div>
-
-        <div className="shoreline"></div>
-
-        <div className="shell shell-one"></div>
-        <div className="shell shell-two"></div>
-        <div className="shell shell-three"></div>
-      </div>
-
-      <Navbar
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        user={user}
-        onLogout={handleLogout}
-      />
-
-      <div className="echo-content">
-        {currentPage === "timeline" && (
-          <Timeline onOpenMemory={openMemory} />
-        )}
-
-        {currentPage === "create" && (
-          <CreateMemory />
-        )}
-
-        {currentPage === "memory" && selectedMemoryId && (
-          <MemoryDetail
-            memoryId={selectedMemoryId}
-            onBack={closeMemory}
-            onEdit={openEditMemory}
-          />
-        )}
-
-        {currentPage === "edit" && selectedMemoryId && (
-          <EditMemory
-            memoryId={selectedMemoryId}
-            onBack={closeEditMemory}
-          />
-        )}
-      </div>
-    </div>
-  );
+function Page({ children }) {
+  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
 }
 
-export default App;
+function RequireAuth() {
+  const { user, status } = useAuth();
+  const location = useLocation();
+  if (status === "checking") return <PageLoader label="Opening your archive…" />;
+  if (!user) {
+    const next = location.pathname + location.search;
+    return <Navigate to={next === "/" ? "/welcome" : `/welcome?next=${encodeURIComponent(next)}`} replace />;
+  }
+  return <Outlet />;
+}
+
+function PublicOnly() {
+  const { user, status } = useAuth();
+  const location = useLocation();
+  if (status === "checking") return <PageLoader label="Opening Echo…" />;
+  if (user) {
+    const next = new URLSearchParams(location.search).get("next");
+    // Only allow internal paths as a redirect target.
+    return <Navigate to={next && next.startsWith("/") && !next.startsWith("//") ? next : "/"} replace />;
+  }
+  return <Outlet />;
+}
+
+const router = createBrowserRouter([
+  {
+    element: <PublicOnly />,
+    children: [{ path: "/welcome", element: <Page><Welcome /></Page> }],
+  },
+  {
+    element: <RequireAuth />,
+    children: [
+      {
+        element: <AppShell />,
+        children: [
+          { index: true, element: <Archive /> },
+          { path: "new", element: <Page><MemoryNew /></Page> },
+          { path: "memories/:id", element: <Page><MemoryView /></Page> },
+          { path: "memories/:id/edit", element: <Page><MemoryEdit /></Page> },
+          { path: "ask", element: <Page><Ask /></Page> },
+          { path: "on-this-day", element: <Page><OnThisDay /></Page> },
+          { path: "capsules", element: <Page><Capsules /></Page> },
+          { path: "capsules/:id", element: <Page><CapsuleView /></Page> },
+          { path: "settings", element: <Page><Settings /></Page> },
+          { path: "*", element: <Page><NotFound /></Page> },
+        ],
+      },
+    ],
+  },
+]);
+
+export default function App() {
+  return (
+    <ToastProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ToastProvider>
+  );
+}

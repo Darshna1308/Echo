@@ -84,6 +84,19 @@ describe("login and sessions", () => {
     assert.equal(after.status, 401);
   });
 
+  test("/auth/session reports the user or null without an error status", async () => {
+    const anon = await request(ctx.app).get("/api/auth/session");
+    assert.equal(anon.status, 200);
+    assert.equal(anon.body.user, null);
+    const agent = await newUser(ctx.app, "Session");
+    const res = await agent.get("/api/auth/session");
+    assert.equal(res.body.user.email, agent.email);
+    const bad = await request(ctx.app).get("/api/auth/session").set("Cookie", "echo_session=nope");
+    assert.equal(bad.status, 200);
+    assert.equal(bad.body.user, null);
+    assert.ok(sessionCookie(bad), "bad cookie cleared");
+  });
+
   test("existing accounts with older 6-character passwords can still log in", async () => {
     const User = ctx.mongoose.model("User");
     await User.create({ name: "Legacy", email: "legacy@example.com", password: await bcrypt.hash("abc123", 10) });

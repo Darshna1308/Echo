@@ -6,7 +6,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 
-const { protect } = require("../middleware/auth");
+const { protect, currentSession } = require("../middleware/auth");
 const { validate, validId } = require("../middleware/validate");
 const { authLimiter, aiLimiter, uploadLimiter } = require("../middleware/security");
 const v = require("../utils/validators");
@@ -59,6 +59,7 @@ router.post("/auth/register", authLimiter, validate(v.registerSchema), auth.regi
 router.post("/auth/login", authLimiter, validate(v.loginSchema), auth.login);
 router.post("/auth/logout", auth.logout);
 router.get("/auth/me", protect, auth.me);
+router.get("/auth/session", currentSession);
 router.post("/auth/logout-all", protect, auth.logoutAll);
 router.get("/auth/export", protect, auth.exportData);
 router.delete("/auth/account", authLimiter, protect, validate(v.deleteAccountSchema), auth.deleteAccount);
