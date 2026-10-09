@@ -1,2 +1,33 @@
+# Dependencies
 node_modules/
+
+# Secrets — never commit real credentials
 .env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+coverage/
+.vercel/
+
+# Logs and local data
+*.log
+npm-debug.log*
+logs/
+data/
+*.sqlite
+*.sqlite-*
+
+# Test and tool output
+playwright-report/
+test-results/
+screenshots/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
