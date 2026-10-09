@@ -1,0 +1,703 @@
+/* =========================================================
+   Echo Photo Styles
+   Styles are CSS variables on .pf; every style drives the same
+   filter list, so switching styles transitions smoothly.
+   The source image is never modified.
+   ========================================================= */
+
+@keyframes pfSettle {
+  0%, 100% { transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry)) rotate(var(--rot)) translateY(var(--up)) scale(1); }
+  35% { transform: perspective(1200px) rotateX(4deg) rotateY(-3deg) rotate(calc(var(--rot) + 1.1deg)) translateY(-13px) scale(1.014); }
+}
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes leakDrift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-4%, 3%) scale(1.08); }
+}
+@keyframes sunSweep {
+  from { transform: translateX(-9%); }
+  to { transform: translateX(9%); }
+}
+@keyframes photoDrift {
+  from { transform: rotate(2.2deg) translateY(0); }
+  to { transform: rotate(1.4deg) translateY(-5px); }
+}
+@keyframes pspFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes blankFloat {
+  from { transform: rotate(-2deg) translateY(0); }
+  to { transform: rotate(-1.2deg) translateY(-6px); }
+}
+@keyframes pspPlace {
+  from { opacity: 0; transform: translateY(-26px) rotate(-3deg) scale(1.04); filter: blur(2px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* ---------- The physical photograph ---------- */
+.pf {
+  --paper: #FFFEF9;
+  --pt: 0.5em; --px: 0.5em; --pb: 0.5em;
+  --rot: 0deg; --rx: 0deg; --ry: 0deg; --up: 0px;
+  --ar: 4 / 3;
+
+  --gray: 0; --sepia: 0; --sat: 1; --con: 1; --bri: 1; --hue: 0deg; --blur: 0px;
+  --grain-o: 0; --vig: 0; --edge: 0; --wash: 0;
+  --tint: 0; --tint-c: #E9C46A;
+  --leak: 0; --leak-c: rgba(255, 196, 110, 0.75); --leak-x: 100%; --leak-y: 0%;
+  --stamp: 0; --cap: 0; --sig: 0;
+
+  position: relative;
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  padding: var(--pt) var(--px) var(--pb);
+  background: var(--paper);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 1px rgba(23, 50, 77, 0.12),
+    0 6px 12px -2px rgba(60, 45, 25, 0.22),
+    0 18px 28px -10px rgba(23, 50, 77, 0.28);
+  transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry)) rotate(var(--rot)) translateY(var(--up));
+  transform-origin: 50% 60%;
+  transition:
+    transform 0.7s ease-in-out,
+    box-shadow 0.7s ease-in-out,
+    background-color 0.9s ease-in-out,
+    padding 0.9s ease-in-out;
+}
+.pf.is-settling { animation: pfSettle 1.2s ease-in-out; }
+
+.pf--main { font-size: 17px; --ar: 3 / 2; }
+.pf--main.is-portrait { --ar: 4 / 5; width: min(100%, 400px); margin-inline: auto; }
+.pf--main.is-square { --ar: 1 / 1; width: min(100%, 480px); margin-inline: auto; }
+.pf--thumb { font-size: 9px; }
+.pf--card { font-size: 11px; }
+
+.pf--main:hover {
+  --rx: 2deg; --ry: -3deg; --up: -6px;
+  box-shadow:
+    0 1px 1px rgba(23, 50, 77, 0.12),
+    0 12px 20px -2px rgba(60, 45, 25, 0.26),
+    0 34px 46px -14px rgba(23, 50, 77, 0.34);
+}
+
+.pf-image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: var(--ar);
+  background: #cfc6b4;
+  border-radius: 1px;
+}
+.pf-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter:
+    grayscale(var(--gray)) sepia(var(--sepia)) saturate(var(--sat))
+    contrast(var(--con)) brightness(var(--bri)) hue-rotate(var(--hue)) blur(var(--blur));
+  transition: filter 1s ease-in-out;
+}
+.pf-image > span { position: absolute; inset: 0; pointer-events: none; display: block; }
+
+.pf-tint {
+  background-color: var(--tint-c);
+  mix-blend-mode: soft-light;
+  opacity: var(--tint);
+  transition: opacity 1s ease-in-out, background-color 1s ease-in-out;
+}
+.pf-wash { background: #FFF6E6; opacity: var(--wash); transition: opacity 1s ease-in-out; }
+.pf-leak {
+  background-color: var(--leak-c);
+  -webkit-mask-image: radial-gradient(ellipse at var(--leak-x) var(--leak-y), #000, transparent 62%);
+  mask-image: radial-gradient(ellipse at var(--leak-x) var(--leak-y), #000, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: var(--leak);
+  transition: opacity 1s ease-in-out, background-color 1s ease-in-out;
+}
+.pf-edge {
+  background: radial-gradient(ellipse at center, transparent 55%, #F3E8CF 135%);
+  opacity: var(--edge);
+  transition: opacity 1s ease-in-out;
+}
+.pf-vig {
+  background: radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(20, 25, 30, 0.9) 130%);
+  opacity: var(--vig);
+  transition: opacity 1s ease-in-out;
+}
+.pf-grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  mix-blend-mode: overlay;
+  opacity: var(--grain-o);
+  transition: opacity 1s ease-in-out;
+}
+
+/* Only the large preview gets moving grain and drifting light */
+.pf--main .pf-grain { inset: -10%; animation: grainShift 10s steps(10) infinite; }
+.pf--main .pf-leak { animation: leakDrift 16s ease-in-out infinite alternate; }
+
+/* Echo's quiet signature on Beach photographs */
+.pf-image::after {
+  content: "";
+  position: absolute;
+  right: 0.9em;
+  bottom: 0.7em;
+  width: 3.6em;
+  height: 1.4em;
+  z-index: 5;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='28'><path d='M2 9 Q11 1 20 9 T38 9 T56 9 T70 9 M2 20 Q11 12 20 20 T38 20 T56 20 T70 20' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'/></svg>") no-repeat center / contain;
+  opacity: var(--sig);
+  transition: opacity 1s ease-in-out;
+}
+
+/* Polaroid caption */
+.pf-caption {
+  position: absolute;
+  left: 1.1em;
+  right: 1.1em;
+  bottom: 0;
+  height: var(--pb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: var(--cap);
+  transition: opacity 0.8s ease-in-out;
+  pointer-events: none;
+}
+.pf-caption span {
+  max-width: 100%;
+  font-family: var(--font-hand);
+  font-size: 1.8em;
+  line-height: 1.2;
+  color: #3f566e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: rotate(-1deg);
+}
+
+/* Postcard stamp + postmark */
+.pf-stamp {
+  position: absolute;
+  top: 1.1em;
+  right: 1.1em;
+  z-index: 3;
+  width: 4.4em;
+  height: 5.4em;
+  padding: 0.35em;
+  background: #FFF9EF;
+  border: 0.3em dotted #F1E4C8;
+  box-shadow: 0 1px 3px rgba(23, 50, 77, 0.35);
+  transform: rotate(4deg);
+  opacity: var(--stamp);
+  transition: opacity 0.9s ease-in-out;
+  pointer-events: none;
+}
+.pf-stamp svg { display: block; width: 100%; height: 100%; }
+.pf-postmark {
+  position: absolute;
+  top: 1.5em;
+  right: 5.2em;
+  z-index: 3;
+  width: 7em;
+  opacity: calc(var(--stamp) * 0.55);
+  mix-blend-mode: multiply;
+  transform: rotate(-8deg);
+  transition: opacity 0.9s ease-in-out;
+  pointer-events: none;
+}
+
+/* ---------- The twelve styles ---------- */
+.ps-vintage {
+  --paper: #F6EDD9; --pt: 0.8em; --px: 0.8em; --pb: 0.8em; --rot: 0.4deg;
+  --sepia: 0.3; --sat: 0.78; --con: 1.1; --hue: -8deg;
+  --grain-o: 0.32; --vig: 0.3; --edge: 0.3; --tint: 0.22; --tint-c: #E9C46A; --wash: 0.06;
+}
+.ps-polaroid {
+  --paper: #FBF6EA; --pt: 1.1em; --px: 1.1em; --pb: 4.4em; --rot: -2deg;
+  --sepia: 0.06; --sat: 1.04; --con: 1.02; --bri: 1.02;
+  --grain-o: 0.12; --vig: 0.12; --cap: 1;
+}
+.ps-warm {
+  --sepia: 0.12; --sat: 1.12; --con: 1.06; --bri: 1.04; --hue: -10deg;
+  --tint: 0.28; --tint-c: #E9A94A; --leak: 0.2; --vig: 0.12;
+}
+.ps-fade {
+  --sat: 0.82; --con: 0.78; --bri: 1.1; --sepia: 0.05; --wash: 0.22; --edge: 0.15;
+}
+.ps-film {
+  --paper: #2B2723; --pt: 0.55em; --px: 0.4em; --pb: 0.55em;
+  --sat: 0.92; --con: 1.08; --sepia: 0.1; --hue: -4deg;
+  --grain-o: 0.5; --vig: 0.28; --wash: 0.1; --tint: 0.14; --tint-c: #2A9D8F;
+  --leak: 0.12; --leak-c: rgba(233, 137, 60, 0.8); --leak-x: 0%; --leak-y: 50%;
+}
+.ps-noir {
+  --gray: 1; --con: 1.35; --bri: 0.95; --grain-o: 0.3; --vig: 0.6;
+}
+.ps-sunset {
+  --sepia: 0.12; --sat: 1.25; --con: 1.08; --bri: 1.02; --hue: -14deg;
+  --tint: 0.38; --tint-c: #E98973;
+  --leak: 0.32; --leak-c: rgba(244, 170, 80, 0.85); --leak-x: 80%; --leak-y: 100%;
+  --vig: 0.2;
+}
+.ps-beach {
+  --rot: 0.3deg;
+  --sepia: 0.14; --sat: 0.96; --con: 0.9; --bri: 1.05;
+  --tint: 0.2; --tint-c: #2A9D8F; --wash: 0.09;
+  --leak: 0.3; --leak-c: rgba(255, 205, 120, 0.8); --leak-x: 100%; --leak-y: 0%;
+  --grain-o: 0.28; --vig: 0.25; --sig: 0.6;
+}
+.ps-dreamy {
+  --con: 0.86; --bri: 1.1; --sat: 1.06; --blur: 0.7px; --wash: 0.08;
+  --leak: 0.45; --leak-c: rgba(255, 246, 228, 0.9); --leak-x: 35%; --leak-y: 25%;
+  --edge: 0.12; --grain-o: 0.08;
+}
+.ps-postcard {
+  --paper: #F1E4C8; --pt: 0.8em; --px: 0.8em; --pb: 0.8em; --rot: 1deg;
+  --sepia: 0.1; --sat: 0.88; --con: 0.92; --bri: 1.04;
+  --tint: 0.15; --tint-c: #E9C46A; --wash: 0.1; --grain-o: 0.18; --stamp: 1;
+}
+.ps-old {
+  --paper: #EADBB9; --pt: 0.6em; --px: 0.6em; --pb: 0.6em;
+  --sepia: 0.85; --sat: 0.7; --bri: 0.98; --hue: -10deg;
+  --grain-o: 0.6; --vig: 0.45; --edge: 0.35; --wash: 0.14; --tint: 0.2; --tint-c: #B88A5C;
+}
+
+/* ---------- Style picker ---------- */
+.psp { position: relative; margin-top: 92px; }
+.psp-head { max-width: 560px; margin-bottom: 30px; }
+.psp-title {
+  margin: 0 0 8px;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  line-height: 1;
+  color: var(--text);
+  transform: rotate(-0.8deg);
+  transform-origin: left center;
+}
+.psp-sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.35rem;
+  color: #4a6078;
+}
+
+.psp-error {
+  max-width: 560px;
+  margin: 0 0 20px;
+  padding: 8px 0 8px 14px;
+  font-family: var(--font-type);
+  font-size: 0.88rem;
+  color: #9a4a38;
+  border-left: 2px solid var(--coral);
+  animation: pspFadeUp 0.5s ease-in-out both;
+}
+
+/* Stage: the large preview */
+.psp-stage { position: relative; padding: 34px 16px 36px; text-align: center; }
+.psp-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 38%, rgba(255, 243, 214, 0.75), transparent 66%);
+  animation: sunSweep 22s ease-in-out infinite alternate;
+}
+.psp-memtitle {
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  color: var(--text);
+  transform: rotate(-0.6deg);
+}
+.psp-photo {
+  position: relative;
+  isolation: isolate;
+  width: min(560px, 100%);
+  margin: 26px auto 34px;
+  animation: pspPlace 1.1s ease-in-out both;
+}
+.psp-photo::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -16px;
+  height: 22px;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(23, 50, 77, 0.3), transparent 70%);
+  filter: blur(6px);
+}
+.psp-status {
+  font-family: var(--font-type);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  animation: pspFadeUp 0.7s ease-in-out both;
+}
+.psp-status span { color: var(--ocean); }
+.psp-line {
+  margin-top: 6px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.7rem;
+  line-height: 1.3;
+  color: var(--text);
+  animation: pspFadeUp 0.9s ease-in-out 0.1s both;
+}
+.psp-file-name {
+  max-width: 100%;
+  margin: 18px auto 0;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.psp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 26px;
+  margin-top: 6px;
+}
+.psp-link {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin-top: 10px;
+  padding: 4px 2px;
+  cursor: pointer;
+  font-family: var(--font-type);
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline dotted;
+  text-underline-offset: 5px;
+  transition: color 0.3s ease-in-out;
+}
+.psp-link:hover, .psp-link:focus-visible { color: var(--ocean); }
+.psp-note {
+  max-width: 460px;
+  margin: 14px auto 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Driftwood tabletop */
+.psp-table {
+  position: relative;
+  overflow: hidden;
+  padding: 46px 34px 44px;
+  border-radius: 4px 6px 5px 4px;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='.012 .45' numOctaves='3' seed='4'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .18 0 0 0 .55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>"),
+    repeating-linear-gradient(180deg, transparent 0 148px, rgba(70, 48, 24, 0.22) 148px 150px),
+    linear-gradient(180deg, #D9C7A5, #CDB892 50%, #D3C09B);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    inset 0 2px 14px rgba(60, 40, 20, 0.25),
+    0 18px 34px -16px rgba(23, 50, 77, 0.35);
+}
+.psp-table::after {
+  content: "";
+  position: absolute;
+  inset: -20% -30%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 236, 190, 0.28) 48%, rgba(255, 236, 190, 0.1) 56%, transparent 68%);
+  animation: sunSweep 20s ease-in-out infinite alternate;
+}
+.psp-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 44px 30px;
+  align-items: start;
+}
+
+.psp-print {
+  appearance: none;
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transform: rotate(var(--tilt, 0deg)) translateY(var(--dy, 0px));
+  transition: transform 0.6s ease-in-out;
+}
+.psp-print:nth-child(1)  { --tilt: -2.4deg; --dy: 0px; }
+.psp-print:nth-child(2)  { --tilt: 1.6deg;  --dy: 14px; }
+.psp-print:nth-child(3)  { --tilt: -1.1deg; --dy: 4px; }
+.psp-print:nth-child(4)  { --tilt: 2.2deg;  --dy: 18px; }
+.psp-print:nth-child(5)  { --tilt: 1.3deg;  --dy: 6px; }
+.psp-print:nth-child(6)  { --tilt: -2deg;   --dy: 0px; }
+.psp-print:nth-child(7)  { --tilt: 0.9deg;  --dy: 16px; }
+.psp-print:nth-child(8)  { --tilt: -1.6deg; --dy: 6px; }
+.psp-print:nth-child(9)  { --tilt: -1.8deg; --dy: 2px; }
+.psp-print:nth-child(10) { --tilt: 1.9deg;  --dy: 12px; }
+.psp-print:nth-child(11) { --tilt: -0.8deg; --dy: 4px; }
+.psp-print:nth-child(12) { --tilt: 1.4deg;  --dy: 14px; }
+
+.psp-print:hover,
+.psp-print:focus-visible {
+  transform: rotate(calc(var(--tilt) * 0.5)) translateY(calc(var(--dy) - 4px));
+}
+.psp-print:focus-visible { outline: 2px solid var(--ocean); outline-offset: 8px; }
+.psp-print.is-selected {
+  z-index: 2;
+  transform: rotate(calc(var(--tilt) * 0.3)) translateY(calc(var(--dy) - 8px)) scale(1.03);
+}
+.psp-print.is-selected .pf {
+  outline: 1px solid rgba(23, 107, 135, 0.55);
+  outline-offset: 3px;
+  box-shadow:
+    0 1px 1px rgba(23, 50, 77, 0.12),
+    0 12px 18px -2px rgba(60, 45, 25, 0.28),
+    0 26px 34px -12px rgba(23, 50, 77, 0.34);
+}
+
+.psp-mark {
+  position: absolute;
+  top: -13px;
+  left: 12px;
+  z-index: 4;
+  padding: 2px 12px 3px 10px;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #7a3b2a;
+  background: rgba(233, 196, 106, 0.7);
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.2);
+  clip-path: polygon(0 0, 100% 0, 97% 30%, 100% 60%, 97% 100%, 0 100%, 3% 60%, 0 30%);
+  opacity: 0;
+  transform: rotate(-5deg) translateY(4px);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+.psp-print.is-selected .psp-mark { opacity: 1; transform: rotate(-5deg); }
+
+.psp-slip {
+  position: relative;
+  display: block;
+  margin: -0.55rem 0.4rem 0;
+  padding: 8px 10px 9px;
+  background: #FFF9EF;
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.25), 0 6px 10px -4px rgba(60, 40, 20, 0.25);
+  transform: rotate(calc(var(--tilt, 0deg) * -1.4));
+}
+.psp-name { display: block; font-family: var(--font-type); font-size: 0.82rem; color: var(--text); }
+.psp-desc { display: block; margin-top: 2px; font-family: var(--font-hand); font-size: 1.12rem; line-height: 1.05; color: #4a6078; }
+
+/* Empty state: a photograph waiting to be placed (the whole area is the button) */
+.psp-drop {
+  appearance: none;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 26px 16px 22px;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.psp-drop:focus-visible { outline: 2px solid var(--ocean); outline-offset: 6px; border-radius: 4px; }
+.psp-blank {
+  position: relative;
+  display: block;
+  width: min(360px, 100%);
+  padding: 14px 14px 56px;
+  background: #FBF6EA;
+  box-shadow: 0 2px 2px rgba(23, 50, 77, 0.08), 0 16px 28px -8px rgba(23, 50, 77, 0.25);
+  transform: rotate(-2deg);
+  animation: blankFloat 9s ease-in-out infinite alternate;
+  transition: box-shadow 0.6s ease-in-out;
+}
+.psp-blank::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 38%;
+  width: 78px;
+  height: 22px;
+  background: rgba(168, 218, 220, 0.65);
+  box-shadow: 0 1px 2px rgba(23, 50, 77, 0.12);
+  transform: rotate(-4deg);
+}
+.psp-blank-inner {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  color: var(--ocean);
+  border: 1.5px dashed rgba(23, 107, 135, 0.4);
+  background: linear-gradient(180deg, rgba(168, 218, 220, 0.22), rgba(232, 246, 243, 0.2) 55%, rgba(233, 215, 176, 0.3));
+  transition: border-color 0.5s ease-in-out, background-color 0.5s ease-in-out;
+}
+.psp-blank-inner svg { width: 84px; opacity: 0.6; transition: opacity 0.5s ease-in-out; }
+.psp-blank i { position: absolute; width: 0; height: 0; border: 0 solid transparent; }
+.psp-blank .c1 { top: 8px; left: 8px; border-top: 26px solid rgba(120, 95, 55, 0.45); border-right-width: 26px; }
+.psp-blank .c2 { top: 8px; right: 8px; border-top: 26px solid rgba(120, 95, 55, 0.45); border-left-width: 26px; }
+.psp-blank .c3 { bottom: 48px; left: 8px; border-bottom: 26px solid rgba(120, 95, 55, 0.45); border-right-width: 26px; }
+.psp-blank .c4 { bottom: 48px; right: 8px; border-bottom: 26px solid rgba(120, 95, 55, 0.45); border-left-width: 26px; }
+
+.psp-drop:hover .psp-blank,
+.psp-drop:focus-visible .psp-blank,
+.psp-drop.is-over .psp-blank {
+  animation-play-state: paused;
+  box-shadow: 0 2px 2px rgba(23, 50, 77, 0.1), 0 24px 36px -10px rgba(23, 50, 77, 0.32);
+}
+.psp-drop:hover .psp-blank-inner,
+.psp-drop:focus-visible .psp-blank-inner,
+.psp-drop.is-over .psp-blank-inner {
+  border-color: var(--ocean);
+  background-color: rgba(232, 246, 243, 0.5);
+}
+.psp-drop:hover .psp-blank-inner svg,
+.psp-drop.is-over .psp-blank-inner svg { opacity: 0.9; }
+
+.psp-empty-title { display: block; margin-top: 30px; font-family: var(--font-hand); font-weight: 600; font-size: 2.6rem; line-height: 1.1; color: var(--text); }
+.psp-empty-sub { display: block; margin-top: 4px; font-family: var(--font-serif); font-style: italic; font-size: 1.35rem; color: #4a6078; }
+.psp-cta {
+  display: block;
+  margin-top: 18px;
+  font-family: var(--font-type);
+  font-size: 0.9rem;
+  color: var(--ocean);
+  text-decoration: underline dotted;
+  text-underline-offset: 5px;
+}
+
+/* ---------- Create page layout ---------- */
+.journal-actions { max-width: 720px; margin: 40px 0 0 clamp(0px, 14vw, 180px); }
+@media (max-width: 1100px) { .journal-actions { margin-left: 0; } }
+
+/* ---------- Timeline photographs ---------- */
+.memory-photos { position: relative; margin: 0 0 1.4rem; }
+.memory-card .memory-foot { clear: both; }
+.pf-slot { position: relative; }
+.memory-card:hover .memory-photos .pf { --up: -3px; }
+
+.mp-journal { width: min(100%, 360px); transform: rotate(-1deg); }
+.mp-journal .pf-slot::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 42%;
+  z-index: 4;
+  width: 78px;
+  height: 22px;
+  background: rgba(168, 218, 220, 0.65);
+  box-shadow: 0 1px 2px rgba(23, 50, 77, 0.12);
+  clip-path: polygon(0 0, 3% 20%, 0 40%, 3% 60%, 0 80%, 0 100%, 100% 100%, 97% 80%, 100% 60%, 97% 40%, 100% 20%, 100% 0);
+  transform: rotate(3deg);
+}
+
+.mp-floating {
+  float: right;
+  width: min(44%, 290px);
+  margin: 0.2rem 0 1rem 1.8rem;
+  transform: rotate(2.2deg);
+  animation: photoDrift 11s ease-in-out infinite alternate;
+}
+
+.mp-pinned {
+  float: right;
+  width: min(40%, 260px);
+  margin: -0.4rem -1.2rem 1rem 1.6rem;
+  transform: rotate(-3deg);
+}
+.mp-pinned .pf-slot::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 18%;
+  z-index: 4;
+  width: 13px;
+  height: 34px;
+  border: 2px solid #9aa4ad;
+  border-radius: 8px;
+  transform: rotate(8deg);
+}
+
+.mp-wide { width: 100%; --ar: 16 / 9; transform: rotate(-0.5deg); }
+.mp-wide .pf { font-size: 13px; --ar: 16 / 9; }
+
+.mp-collage { display: flex; align-items: flex-start; padding-bottom: 1.8rem; }
+.mp-collage .pf-slot:nth-child(1) { transform: rotate(-2.5deg); }
+.mp-collage .pf-slot:nth-child(2) { margin-left: -12%; margin-top: 2rem; transform: rotate(2.8deg); z-index: 2; }
+.mp-collage .pf-slot:nth-child(3) { margin-left: -6%; margin-top: 0.4rem; transform: rotate(-1deg); z-index: 1; }
+.mp-n2 .pf-slot { flex: 0 0 56%; }
+.mp-n3 .pf-slot { flex: 0 0 36%; }
+.mp-n3 .pf { font-size: 9px; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 900px) {
+  .psp { margin-top: 70px; }
+  .psp-table { padding: 38px 22px 36px; }
+  .psp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 22px; }
+  .pf--main { font-size: 15px; }
+  .psp-photo { width: min(480px, 100%); }
+  .mp-floating { width: min(42%, 240px); }
+  .mp-pinned { width: min(38%, 220px); }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 640px) {
+  .psp { margin-top: 56px; }
+  .psp-stage { padding: 26px 0 30px; }
+  .psp-memtitle { font-size: 2rem; }
+  .psp-line { font-size: 1.45rem; }
+  .pf--main { font-size: 13px; }
+  .psp-table { padding: 32px 14px 34px; }
+  .psp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 14px; }
+  .pf--thumb { font-size: 6.5px; }
+  .psp-slip { margin: -0.45rem 0.2rem 0; padding: 6px 7px 7px; }
+  .psp-name { font-size: 0.72rem; }
+  .psp-desc { font-size: 1rem; }
+  .psp-mark { font-size: 1.1rem; left: 6px; }
+  .psp-empty-title { font-size: 2.2rem; }
+
+  .memory-photos .pf { font-size: 10px; }
+  .mp-journal { width: 100%; }
+  .mp-floating, .mp-pinned {
+    float: none;
+    width: min(100%, 340px);
+    margin: 0 auto 1.2rem;
+  }
+  .mp-n3 .pf { font-size: 7px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .pf, .pf *, .psp *, .memory-photos, .psp-stage::before, .psp-table::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .psp-table::after { display: none; }
+}
